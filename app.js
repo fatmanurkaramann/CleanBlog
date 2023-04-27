@@ -28,8 +28,9 @@ app.get("/about",(req,res)=>{
 app.get("/add-post",(req,res)=>{
     res.render("add_post")
 })
-app.get("/post",(req,res)=>{
-    res.render("post")
+app.get("/post/:id",async (req,res)=>{
+    const blog=await Post.findById(req.params.id)
+    res.render("post",{blog})
 })
 app.post("/blogs",async (req,res)=>{
    await Post.create(req.body)
