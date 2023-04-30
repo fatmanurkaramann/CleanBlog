@@ -3,7 +3,8 @@ const mongoose = require('mongoose')
 const methodOverride = require('method-override')
 const path=require('path')
 const ejs = require('ejs')
-const Post = require('./models/Post')
+const pageController=require('./controller/pageController')
+const blogController=require('./controller/blogController')
 
 const app = express()
 
@@ -20,43 +21,15 @@ app.use(methodOverride('_method', {
     methods: ['POST', 'GET']
 }))
 
-app.get("/",async (req,res)=>{
-    const blogs = await Post.find()
-    res.render("index",{
-        blogs
-    })
-})
-app.get("/about",(req,res)=>{
-    res.render("about")
-})
-app.get("/add-post",(req,res)=>{
-    res.render("add_post")
-})
-app.get("/post/:id",async (req,res)=>{
-    const blog=await Post.findById(req.params.id)
-    res.render("post",{blog})
-})
-app.post("/blogs",async (req,res)=>{
-   await Post.create(req.body)
-    res.redirect("/")
-})
-app.get('/post/edit/:id',async(req,res)=>{
-    const blog=await Post.findById(req.params.id)
-    console.log(blog.id)
-    res.render('edit',{blog})
-})
-app.put('/post/:id',async(req,res)=>{
-    const blog=await Post.findById(req.params.id)
+app.get("/",pageController.homePage)
+app.get("/about",pageController.getAboutPage)
+app.get("/add-post",pageController.getAddPostPage)
+app.get("/post/:id",pageController.postDetailPage)
+app.get('/post/edit/:id',pageController.postEditPage)
 
-    await Post.findByIdAndUpdate(blog, {
-        title: req.body.title,
-        blogDetail: req.body.blogDetail,
-        createdBy:req.body.createdBy,
-        contents:req.body.contents
-    })
-    blog.save()
-    res.redirect(`/post/${req.params.id}`)
-})
+app.post("/blogs",blogController.addPost)
+app.put('/post/:id',blogController.editPost)
+app.delete('/post/:id',blogController.deletePost)
 
 
 const port=3000
