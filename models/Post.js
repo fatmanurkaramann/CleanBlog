@@ -8,7 +8,8 @@ const blogSchema=new Schema({
         type:Date,
         default:Date.now
     },
-    createdBy:String
+    createdBy:String,
+    contents:String
 })
 
 
