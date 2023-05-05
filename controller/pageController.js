@@ -7,7 +7,7 @@ exports.homePage=async (req,res)=>{
     const totalBlogs=await Post.find().countDocuments()
     const showPreviousPageLink = page > 1 && page !== '1';
     const blogs = await Post.find()
-    .sort('-dateCreated')
+    .sort('-createdDate')
     .skip((page-1)*blogPerPage)
     .limit(blogPerPage)
 
